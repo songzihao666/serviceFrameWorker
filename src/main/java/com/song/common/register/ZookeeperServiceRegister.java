@@ -23,6 +23,8 @@ public class ZookeeperServiceRegister {
 	private String serviceName;	
 	@Autowired
 	private CuratorZookeeperClient client;
+	@Value("${port}")
+	private int port;
 	
 	@PostConstruct
 	private void init() throws Exception {
@@ -39,7 +41,7 @@ public class ZookeeperServiceRegister {
 			zooKeeper.create("/" + orgName + "/services/" + serviceName, null,
 					ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 		}
-		zooKeeper.create("/" + orgName + "/services/" + serviceName + "/" + InetAddress.getLocalHost().getHostAddress() + ":9999", null,
+		zooKeeper.create("/" + orgName + "/services/" + serviceName + "/" + InetAddress.getLocalHost().getHostAddress() + ":" + port, null,
 				ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
 		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

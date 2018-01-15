@@ -29,6 +29,9 @@ public class ApplicationConfig {
 	@Value("${zkServer}")
 	private String zkServer;
 	
+	@Value("${port}")
+	public int port;
+	
 	
 	@Bean
 	public CuratorZookeeperClient zkClientBean() throws Exception {

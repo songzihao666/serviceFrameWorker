@@ -22,9 +22,9 @@ public class BootService {
 		// TODO Auto-generated method stub
 		ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class);
 		ApplicationContextHelper.setContext(applicationContext);
-		TNonblockingServerTransport transport = new TNonblockingServerSocket(9999);
-		TThreadedSelectorServer.Args arg = new TThreadedSelectorServer.Args(transport);
 		ApplicationConfig config = applicationContext.getBean(ApplicationConfig.class);
+		TNonblockingServerTransport transport = new TNonblockingServerSocket(config.port);
+		TThreadedSelectorServer.Args arg = new TThreadedSelectorServer.Args(transport);		
 		arg.protocolFactory(new TCompactProtocol.Factory()).selectorThreads(config.selectorThreads)
 		.workerThreads(config.workerThreads);
 		arg.processor(new ServerService.Processor<ServerService.Iface>(applicationContext.getBean(Iface.class)));
