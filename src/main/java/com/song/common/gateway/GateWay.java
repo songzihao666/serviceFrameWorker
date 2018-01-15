@@ -34,13 +34,15 @@ public class GateWay implements Iface {
 		Result result = null;
 		try {
 			result = serviceProcessor.processor(param.getType(), param.getData());
-			TraceHelper.ssFinish();
+			TraceHelper.addInfo("code", result.getCode() + "");
 		} catch (Exception e) {
 			// TODO: handle exception
 			logger.error(e.getMessage(),e);
 			result = new Result().setCode(500).setMessage(e.getMessage());
-			TraceHelper.ssFinishWithInfo(exception, e.getMessage());
-		}		
+			TraceHelper.addInfo("code", result.getCode() + "");
+			TraceHelper.addInfo(exception, e.getMessage());
+		}
+		TraceHelper.ssFinish();
 		return result;
 	}
 }
