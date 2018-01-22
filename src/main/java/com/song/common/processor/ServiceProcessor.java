@@ -5,7 +5,7 @@ import com.song.common.model.Result;
 
 public interface ServiceProcessor {
 
-	public Result processor(int type, byte[] data);
+	public Result processor(int type, byte[] data) throws Exception;
 	public InvokeInfo getInvokeInfoByType(int type);
 	
 }
