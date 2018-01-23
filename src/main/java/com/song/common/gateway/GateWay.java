@@ -1,9 +1,14 @@
 package com.song.common.gateway;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.song.common.model.Args;
@@ -23,12 +28,15 @@ public class GateWay implements Iface {
 	@Autowired
 	private ServiceProcessor serviceProcessor;
 	
+	@Value("${serviceName}")
+	private String serviceName;
+	
 	@Override
 	public Result doService(Args param) throws TException {
 		// TODO Auto-generated method stub
 		InvokeInfo info = serviceProcessor.getInvokeInfoByType(param.getType());
 		if (info == null) {
-			return new Result().setCode(404).setMessage("no service!");
+			return new Result().setCode(404).setMessage("no this protocol!");
 		}
 		TraceHelper.srStart(param.getCtx(), info.getClassName(), info.getMethodName());
 		Result result = null;
@@ -37,7 +45,17 @@ public class GateWay implements Iface {
 			TraceHelper.addInfo("code", result.getCode() + "");
 		} catch (Exception e) {
 			// TODO: handle exception
+			MDC.put("serviceName", serviceName);
+			try {
+				MDC.put("ip", InetAddress.getLocalHost().getHostAddress());
+			} catch (UnknownHostException unknownHostException) {
+				// TODO: handle exception
+				logger.error(unknownHostException.getMessage(),unknownHostException);
+			}
+			
 			logger.error(e.getMessage(),e);
+			MDC.remove("serviceName");
+			MDC.remove("ip");
 			result = new Result().setCode(500).setMessage(e.getMessage());
 			TraceHelper.addInfo("code", result.getCode() + "");
 			TraceHelper.addInfo(exception, e.getMessage());
