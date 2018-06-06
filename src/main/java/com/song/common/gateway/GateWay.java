@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.song.common.model.Args;
-import com.song.common.model.InvokeInfo;
 import com.song.common.model.Result;
 import com.song.common.processor.ServiceProcessor;
 import com.song.common.protocol.ServerService.Iface;
@@ -34,11 +33,7 @@ public class GateWay implements Iface {
 	@Override
 	public Result doService(Args param) throws TException {
 		// TODO Auto-generated method stub
-		InvokeInfo info = serviceProcessor.getInvokeInfoByType(param.getType());
-		if (info == null) {
-			return new Result().setCode(404).setMessage("no this protocol!");
-		}
-		TraceHelper.srStart(param.getCtx(), info.getClassName(), info.getMethodName());
+		TraceHelper.srStart(param.getCtx());
 		Result result = null;
 		try {
 			result = serviceProcessor.processor(param.getType(), param.getData());
