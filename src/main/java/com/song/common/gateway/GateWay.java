@@ -36,7 +36,7 @@ public class GateWay implements Iface {
 		TraceHelper.srStart(param.getCtx());
 		Result result = null;
 		try {
-			result = serviceProcessor.processor(param.getType(), param.getData());
+			result = serviceProcessor.processor(param.getType(), param.getJdata(), param.getData());
 			TraceHelper.addInfo("code", result.getCode() + "");
 		} catch (Exception e) {
 			// TODO: handle exception
